@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products - MegaBazaar</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{brand:{blue:'#2874f0',yellow:'#ff9f00',dark:'#172337',light:'#f1f3f6'}}}}}</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>body{font-family:'Inter',sans-serif} .fld{width:100%;border-bottom:1px solid #d1d5db;padding:.5rem 0;font-size:.875rem;outline:none;background:transparent} .fld:focus{border-color:#2874f0} .btn{background:#ff9f00;color:#172337;font-weight:700;padding:.7rem 1rem;border-radius:.125rem;width:100%;box-shadow:0 1px 2px rgba(0,0,0,.2)} .btn:hover{background:#fbbf24} .btn:disabled{opacity:.6;cursor:wait}</style>
+<script src="js/app.js"></script>
+</head>
+<body class="bg-brand-light text-gray-800 antialiased">
+<div id="site-header"></div>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+<div class="bg-white rounded-lg shadow-sm p-4 sm:p-6 border border-gray-100">
+<div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-gray-100 mb-4">
+<div><h1 id="title" class="text-xl sm:text-2xl font-bold">All Products</h1><p id="count" class="text-sm text-gray-500"></p></div>
+<label class="text-sm text-gray-600">Sort by
+<select id="sort" class="ml-2 border border-gray-300 rounded px-2 py-1 text-sm">
+<option value="">Newest first</option><option value="price_asc">Price: low to high</option><option value="price_desc">Price: high to low</option><option value="rating">Top rated</option></select></label></div>
+<div id="chips" class="flex gap-2 overflow-x-auto pb-3"></div>
+<div id="grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 mt-2"></div>
+<div id="pager" class="flex items-center justify-center gap-3 mt-8"></div>
+</div></main>
+<script>
+
+const p = new URLSearchParams(location.search);
+const q = p.get('q') || '', category = p.get('category') || '', sort = p.get('sort') || '', page = Math.max(0, parseInt(p.get('page') || '0', 10) || 0);
+const go = (o) => { const n = new URLSearchParams({ q, category, sort, page: 0, ...o }); [...n.keys()].forEach(k => { if (!n.get(k) || (k === 'page' && n.get(k) === '0')) n.delete(k); }); location.search = n.toString(); };
+document.getElementById('sort').value = sort;
+document.getElementById('sort').addEventListener('change', e => go({ sort: e.target.value }));
+const chip = (label, cat) => '<button data-cat="' + MB.esc(cat) + '" class="whitespace-nowrap px-4 py-1.5 rounded-full text-sm border ' +
+  (cat === category ? 'bg-brand-blue text-white border-brand-blue' : 'bg-white text-gray-700 border-gray-300 hover:border-brand-blue') + '">' + MB.esc(label) + '</button>';
+(async () => {
+  try {
+    const cats = await MB.api('/products/categories', { auth: false });
+    const chips = document.getElementById('chips');
+    chips.innerHTML = chip('All', '') + cats.map(c => chip(c, c)).join('');
+    chips.addEventListener('click', e => { const b = e.target.closest('[data-cat]'); if (b) go({ category: b.dataset.cat }); });
+    const qs = new URLSearchParams({ q, category, sort, page, size: 20 });
+    const r = await MB.api('/products?' + qs, { auth: false });
+    document.getElementById('title').textContent = q ? 'Results for "' + q + '"' : (category || 'All Products');
+    document.getElementById('count').textContent = r.totalItems + ' product' + (r.totalItems === 1 ? '' : 's');
+    document.getElementById('grid').innerHTML = r.items.length ? r.items.map(MB.productCard).join('') :
+      '<p class="col-span-full text-center text-gray-500 py-16">No products found.</p>';
+    const pager = document.getElementById('pager');
+    if (r.totalPages > 1) {
+      pager.innerHTML = '<button id="prev" class="px-4 py-1.5 border rounded disabled:opacity-40" ' + (r.page === 0 ? 'disabled' : '') + '>Previous</button>' +
+        '<span class="text-sm text-gray-600">Page ' + (r.page + 1) + ' of ' + r.totalPages + '</span>' +
+        '<button id="next" class="px-4 py-1.5 border rounded disabled:opacity-40" ' + (r.page + 1 >= r.totalPages ? 'disabled' : '') + '>Next</button>';
+      document.getElementById('prev').onclick = () => go({ page: r.page - 1 });
+      document.getElementById('next').onclick = () => go({ page: r.page + 1 });
+    }
+  } catch (err) { document.getElementById('grid').innerHTML = '<p class="col-span-full text-center text-red-600 py-16">' + MB.esc(err.message) + '</p>'; }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard - MegaBazaar</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{brand:{blue:'#2874f0',yellow:'#ff9f00',dark:'#172337',light:'#f1f3f6'}}}}}</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>body{font-family:'Inter',sans-serif} .fld{width:100%;border-bottom:1px solid #d1d5db;padding:.5rem 0;font-size:.875rem;outline:none;background:transparent} .fld:focus{border-color:#2874f0} .btn{background:#ff9f00;color:#172337;font-weight:700;padding:.7rem 1rem;border-radius:.125rem;width:100%;box-shadow:0 1px 2px rgba(0,0,0,.2)} .btn:hover{background:#fbbf24} .btn:disabled{opacity:.6;cursor:wait}</style>
+<script src="js/app.js"></script>
+</head>
+<body class="bg-brand-light text-gray-800 antialiased">
+<div id="site-header"></div>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 grid md:grid-cols-5 lg:grid-cols-6 gap-6">
+<aside class="md:col-span-1 lg:col-span-1 bg-white rounded-lg shadow-sm border border-gray-100 p-3 h-fit">
+<div class="px-2 py-3 border-b border-gray-100 mb-2"><p id="hello" class="font-semibold text-sm"></p><p id="role" class="text-xs text-gray-500"></p></div>
+<nav id="tabs" class="flex md:flex-col gap-1 overflow-x-auto text-sm"></nav></aside>
+<section id="content" class="md:col-span-4 lg:col-span-5 bg-white rounded-lg shadow-sm border border-gray-100 p-5 min-h-[400px]"></section>
+</main>
+<script>
+
+if (MB.requireLogin()) boot();
+async function boot() {
+  let me;
+  try { me = await MB.api('/me'); MB.setAuth({ token: MB.token(), user: me }); } catch (e) { return; }
+  const admin = me.role === 'ADMIN';
+  document.getElementById('hello').textContent = 'Hello, ' + me.fullName;
+  document.getElementById('role').textContent = admin ? 'Administrator' : 'Customer';
+  const tabs = [['profile', 'fa-user', 'My Profile'], ['orders', 'fa-box', 'My Orders']];
+  if (admin) tabs.push(['a-stats', 'fa-chart-line', 'Overview'], ['a-products', 'fa-tags', 'Products'], ['a-orders', 'fa-truck', 'All Orders'], ['a-users', 'fa-users', 'Users']);
+  const nav = document.getElementById('tabs'), content = document.getElementById('content');
+  const E = MB.esc;
+  const th = '<th class="text-left font-semibold px-3 py-2">', td = '<td class="px-3 py-2 align-top">';
+  const table = (head, rows) => '<div class="overflow-x-auto"><table class="min-w-full text-sm"><thead class="bg-brand-light"><tr>' + head.map(h => th + h + '</th>').join('') + '</tr></thead><tbody class="divide-y divide-gray-100">' + rows + '</tbody></table></div>';
+  const badge = s => '<span class="px-2 py-0.5 rounded text-xs font-semibold ' + (s === 'CANCELLED' ? 'bg-red-100 text-red-700' : s === 'DELIVERED' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700') + '">' + s + '</span>';
+  const STATUSES = ['PLACED', 'CONFIRMED', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
+  const fail = err => { content.innerHTML = '<p class="text-red-600">' + E(err.message) + '</p>'; };
+
+  const views = {
+    async profile() {
+      content.innerHTML = '<h2 class="text-lg font-bold mb-4">My Profile</h2><div class="grid lg:grid-cols-2 gap-10">' +
+        '<form id="pf" class="space-y-4"><div id="pm" class="hidden"></div><label class="block text-xs text-gray-500">Full name<input id="pn" class="fld" value="' + E(me.fullName) + '"></label>' +
+        '<label class="block text-xs text-gray-500">Email (login id)<input class="fld text-gray-400" value="' + E(me.email) + '" disabled></label>' +
+        '<label class="block text-xs text-gray-500">Mobile number<input id="pp" maxlength="10" class="fld" value="' + E(me.phone || '') + '"></label>' +
+        '<p class="text-xs text-gray-400">Member since ' + MB.fmtDate(me.createdAt) + '</p><button class="btn max-w-[200px]">Save changes</button></form>' +
+        '<form id="cf" class="space-y-4"><h3 class="font-semibold">Change password</h3><div id="cm" class="hidden"></div>' +
+        '<label class="block text-xs text-gray-500">Current password<input id="c1" type="password" class="fld"></label>' +
+        '<label class="block text-xs text-gray-500">New password<input id="c2" type="password" class="fld"></label><button class="btn max-w-[200px]">Update password</button></form></div>';
+      pf.onsubmit = async e => { e.preventDefault(); try { me = await MB.api('/me', { method: 'PUT', body: { fullName: pn.value, phone: pp.value } }); MB.setAuth({ token: MB.token(), user: me }); MB.msg(pm, 'Profile saved', true); document.getElementById('hello').textContent = 'Hello, ' + me.fullName; MB.updateBadge(); } catch (err) { MB.msg(pm, err.message, false); } };
+      cf.onsubmit = async e => { e.preventDefault(); try { const r = await MB.api('/me/password', { method: 'POST', body: { currentPassword: c1.value, newPassword: c2.value } }); MB.msg(cm, r.message, true); c1.value = c2.value = ''; } catch (err) { MB.msg(cm, err.message, false); } };
+    },
+    async orders() {
+      const list = await MB.api('/orders');
+      content.innerHTML = '<h2 class="text-lg font-bold mb-4">My Orders</h2>' + (list.length ? list.map(o =>
+        '<div class="border border-gray-200 rounded mb-4"><div class="flex flex-wrap justify-between gap-2 bg-brand-light px-4 py-2 text-sm"><span>Order #' + o.id + ' &middot; ' + MB.fmtDate(o.createdAt) + '</span><span>' + badge(o.status) + ' &nbsp; <b>' + MB.money(o.totalAmount) + '</b></span></div>' +
+        '<div class="p-4 space-y-2">' + o.items.map(i => '<div class="flex items-center gap-3 text-sm"><img src="' + E(i.imageUrl) + '" class="w-10 h-10 object-contain border rounded" onerror="this.style.visibility=\'hidden\'"><span class="flex-1">' + E(i.productName) + '</span><span>' + i.quantity + ' &times; ' + MB.money(i.unitPrice) + '</span></div>').join('') +
+        '<p class="text-xs text-gray-500 pt-2">Deliver to ' + E(o.shippingName) + ', ' + E(o.shippingAddress) + ' (' + E(o.shippingPhone) + ')</p></div></div>').join('') :
+        '<p class="text-gray-500">No orders yet. <a href="products.html" class="text-brand-blue font-semibold">Start shopping</a></p>');
+    },
+    async 'a-stats'() {
+      const s = await MB.api('/admin/stats');
+      const card = (l, v, ic) => '<div class="border border-gray-200 rounded p-4"><i class="fa-solid ' + ic + ' text-brand-blue"></i><p class="text-2xl font-bold mt-2">' + v + '</p><p class="text-xs text-gray-500">' + l + '</p></div>';
+      content.innerHTML = '<h2 class="text-lg font-bold mb-4">Store overview</h2><div class="grid grid-cols-2 lg:grid-cols-4 gap-4">' +
+        card('Registered users', s.users, 'fa-users') + card('Active products', s.products, 'fa-tags') + card('Orders', s.orders, 'fa-box') + card('Revenue (excl. cancelled)', MB.money(s.revenue), 'fa-indian-rupee-sign') + '</div>';
+    },
+    async 'a-products'(edit) {
+      const list = await MB.api('/admin/products');
+      const p = edit ? list.find(x => x.id === edit) : null;
+      const f = (id, label, val, extra) => '<label class="block text-xs text-gray-500">' + label + '<input id="' + id + '" class="fld" value="' + E(val ?? '') + '" ' + (extra || '') + '></label>';
+      content.innerHTML = '<h2 class="text-lg font-bold mb-4">Products (company catalogue)</h2>' +
+        '<form id="prf" class="grid sm:grid-cols-2 gap-4 border border-gray-200 rounded p-4 mb-6"><h3 class="sm:col-span-2 font-semibold">' + (p ? 'Edit product #' + p.id : 'Add a new product') + '</h3><div id="prm" class="hidden sm:col-span-2"></div>' +
+        f('f-name', 'Product name', p?.name) + f('f-cat', 'Category (e.g. Electronics, Mobiles, Fashion)', p?.category, 'list="cats"') + '<datalist id="cats"><option>Electronics<option>Mobiles<option>Fashion<option>Home &amp; Furniture<option>Beauty &amp; Toys<option>Grocery<option>Appliances<option>Travel</datalist>' +
+        f('f-price', 'Selling price (₹)', p?.price, 'type="number" step="0.01" min="0.01"') + f('f-mrp', 'MRP (₹)', p?.mrp, 'type="number" step="0.01" min="0.01"') +
+        f('f-stock', 'Stock quantity', p?.stock ?? 50, 'type="number" min="0"') + f('f-img', 'Image URL (https://...)', p?.imageUrl) +
+        f('f-rate', 'Rating (0-5)', p?.rating ?? 0, 'type="number" step="0.1" min="0" max="5"') + f('f-rc', 'Number of ratings', p?.ratingCount ?? 0, 'type="number" min="0"') +
+        '<label class="sm:col-span-2 block text-xs text-gray-500">Description<textarea id="f-desc" rows="2" class="fld">' + E(p?.description || '') + '</textarea></label>' +
+        '<label class="text-sm"><input id="f-act" type="checkbox" ' + (!p || p.active ? 'checked' : '') + '> Visible in store</label>' +
+        '<div class="sm:col-span-2 flex gap-3"><button class="btn max-w-[180px]">' + (p ? 'Save changes' : 'Add product') + '</button>' + (p ? '<button type="button" id="cancel" class="px-4 text-sm text-gray-600">Cancel</button>' : '') + '</div></form>' +
+        table(['ID', 'Name', 'Category', 'Price', 'Stock', 'Status', ''], list.map(x => '<tr>' + td + x.id + '</td>' + td + E(x.name) + '</td>' + td + E(x.category) + '</td>' + td + MB.money(x.price) + '</td>' + td + x.stock + '</td>' + td + (x.active ? 'Active' : '<span class="text-gray-400">Hidden</span>') + '</td>' +
+          td + '<button data-e="' + x.id + '" class="text-brand-blue font-semibold mr-3">Edit</button>' + (x.active ? '<button data-d="' + x.id + '" class="text-red-500 font-semibold">Remove</button>' : '') + '</td></tr>').join(''));
+      const num = v => v === '' ? null : Number(v);
+      prf.onsubmit = async e => {
+        e.preventDefault();
+        const body = { name: document.getElementById('f-name').value, category: document.getElementById('f-cat').value, description: document.getElementById('f-desc').value,
+          price: num(document.getElementById('f-price').value), mrp: num(document.getElementById('f-mrp').value), imageUrl: document.getElementById('f-img').value.trim(),
+          rating: num(document.getElementById('f-rate').value), ratingCount: num(document.getElementById('f-rc').value), stock: num(document.getElementById('f-stock').value), active: document.getElementById('f-act').checked };
+        try { await MB.api(p ? '/admin/products/' + p.id : '/admin/products', { method: p ? 'PUT' : 'POST', body }); show('a-products'); MB.toast('Product saved'); }
+        catch (err) { MB.msg(prm, err.message, false); }
+      };
+      if (p) document.getElementById('cancel').onclick = () => show('a-products');
+      content.onclick = async e => {
+        const ed = e.target.closest('[data-e]'), de = e.target.closest('[data-d]');
+        if (ed) { await views['a-products'](Number(ed.dataset.e)); window.scrollTo(0, 0); }
+        if (de && confirm('Remove this product from the store?')) { try { await MB.api('/admin/products/' + de.dataset.d, { method: 'DELETE' }); show('a-products'); } catch (err) { alert(err.message); } }
+      };
+    },
+    async 'a-orders'() {
+      const list = await MB.api('/admin/orders');
+      content.innerHTML = '<h2 class="text-lg font-bold mb-4">All orders</h2>' + table(['Order', 'Customer', 'Items', 'Total', 'Status'], list.map(o => '<tr>' + td + '#' + o.id + '<br><span class="text-xs text-gray-400">' + MB.fmtDate(o.createdAt) + '</span></td>' +
+        td + E(o.customerName) + '<br><span class="text-xs text-gray-400">' + E(o.customerEmail) + '</span><br><span class="text-xs text-gray-400">' + E(o.shippingAddress) + ' (' + E(o.shippingPhone) + ')</span></td>' +
+        td + o.items.map(i => E(i.productName) + ' &times; ' + i.quantity).join('<br>') + '</td>' + td + MB.money(o.totalAmount) + '</td>' +
+        td + '<select data-o="' + o.id + '" class="border border-gray-300 rounded px-2 py-1 text-xs"' + (o.status === 'CANCELLED' ? ' disabled' : '') + '>' + STATUSES.map(s => '<option' + (s === o.status ? ' selected' : '') + '>' + s + '</option>').join('') + '</select></td></tr>').join(''));
+      content.onchange = async e => { const s = e.target.closest('[data-o]'); if (!s) return; try { await MB.api('/admin/orders/' + s.dataset.o + '/status', { method: 'PATCH', body: { status: s.value } }); MB.toast('Order updated'); if (s.value === 'CANCELLED') show('a-orders'); } catch (err) { alert(err.message); show('a-orders'); } };
+    },
+    async 'a-users'() {
+      const list = await MB.api('/admin/users');
+      content.innerHTML = '<h2 class="text-lg font-bold mb-4">Registered users</h2><p class="text-xs text-gray-500 mb-3">Passwords are stored only as secure hashes, so even admins cannot see them.</p>' +
+        table(['ID', 'Name', 'Email', 'Mobile', 'Role', 'Joined'], list.map(u => '<tr>' + td + u.id + '</td>' + td + E(u.fullName) + '</td>' + td + E(u.email) + '</td>' + td + E(u.phone || '-') + '</td>' + td + u.role + '</td>' + td + MB.fmtDate(u.createdAt) + '</td></tr>').join(''));
+    }
+  };
+  async function show(key, arg) {
+    if (!views[key]) key = 'profile';
+    content.onclick = null; content.onchange = null;
+    nav.innerHTML = tabs.map(([k, ic, l]) => '<a href="#' + k + '" class="whitespace-nowrap px-3 py-2 rounded ' + (k === key ? 'bg-blue-50 text-brand-blue font-semibold' : 'hover:bg-brand-light') + '"><i class="fa-solid ' + ic + ' w-5"></i> ' + l + '</a>').join('');
+    content.innerHTML = '<p class="text-gray-400">Loading...</p>';
+    try { await views[key](arg); } catch (err) { fail(err); }
+  }
+  window.addEventListener('hashchange', () => show(location.hash.slice(1)));
+  show(location.hash.slice(1));
+}
+</script>
+</body>
+</html>

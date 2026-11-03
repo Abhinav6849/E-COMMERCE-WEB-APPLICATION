@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - MegaBazaar</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{brand:{blue:'#2874f0',yellow:'#ff9f00',dark:'#172337',light:'#f1f3f6'}}}}}</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>body{font-family:'Inter',sans-serif} .fld{width:100%;border-bottom:1px solid #d1d5db;padding:.5rem 0;font-size:.875rem;outline:none;background:transparent} .fld:focus{border-color:#2874f0} .btn{background:#ff9f00;color:#172337;font-weight:700;padding:.7rem 1rem;border-radius:.125rem;width:100%;box-shadow:0 1px 2px rgba(0,0,0,.2)} .btn:hover{background:#fbbf24} .btn:disabled{opacity:.6;cursor:wait}</style>
+<script src="js/app.js"></script>
+</head>
+<body class="bg-brand-light text-gray-800 antialiased">
+<div id="site-header"></div>
+<main class="max-w-4xl mx-auto px-4 py-10">
+<div class="bg-white shadow-sm border border-gray-100 flex flex-col md:flex-row min-h-[460px]">
+<div class="md:w-2/5 bg-brand-blue text-white p-8 flex flex-col justify-between">
+<div><h1 class="text-2xl font-bold">Login</h1><p class="mt-3 text-blue-100 text-sm leading-relaxed">Get access to your orders, saved details and a faster checkout.</p></div>
+<i class="fa-solid fa-bag-shopping text-6xl text-brand-yellow/80 mt-8"></i></div>
+<div class="flex-1 p-8">
+<form id="f" class="space-y-5" novalidate>
+<div id="msg" class="hidden"></div>
+<label class="block text-xs text-gray-500">Email<input id="email" type="email" autocomplete="username" class="fld" required></label>
+<label class="block text-xs text-gray-500">Password<input id="password" type="password" autocomplete="current-password" class="fld" required></label>
+<div class="text-right text-sm"><a href="forgot-password.html" class="text-brand-blue font-semibold hover:underline">Forgot password?</a></div>
+<button id="go" class="btn">Login</button>
+<p class="text-center text-sm">New to MegaBazaar? <a href="register.html" class="text-brand-blue font-semibold hover:underline">Create an account</a></p>
+</form></div></div></main>
+<script>
+
+if (MB.token()) location.replace('dashboard.html');
+const params = new URLSearchParams(location.search);
+document.querySelector('a[href="register.html"]').href = 'register.html' + (params.get('next') ? '?next=' + encodeURIComponent(params.get('next')) : '');
+const msg = document.getElementById('msg');
+document.getElementById('f').addEventListener('submit', async e => {
+  e.preventDefault();
+  const go = document.getElementById('go'); go.disabled = true;
+  try {
+    const auth = await MB.api('/auth/login', { method: 'POST', auth: false,
+      body: { email: email.value, password: password.value } });
+    MB.setAuth(auth);
+    location.href = MB.safeNext(params.get('next')) || 'dashboard.html';
+  } catch (err) { MB.msg(msg, err.message, false); go.disabled = false; }
+});
+</script>
+</body>
+</html>
