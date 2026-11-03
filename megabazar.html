@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MegaBazaar - Online Shopping for Electronics, Fashion, Home & More</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            blue: '#2874f0',
+                            yellow: '#ff9f00',
+                            dark: '#172337',
+                            light: '#f1f3f6'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-brand-light text-gray-800 antialiased selection:bg-brand-blue selection:text-white">
+
+    <!-- Top Header -->
+    <header class="bg-brand-blue text-white sticky top-0 z-40 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+            <!-- Logo & Brand -->
+            <div class="flex items-center gap-6">
+                <a href="#" class="flex flex-col items-start focus:outline-none group">
+                    <span class="text-2xl font-black italic tracking-wider text-brand-yellow drop-shadow">Mega<span class="text-white">Bazaar</span></span>
+                    <span class="text-[10px] italic text-gray-200 -mt-1 group-hover:underline">Explore <span class="text-brand-yellow font-semibold">Plus</span><i class="fa-solid fa-plus text-[8px] text-brand-yellow ml-0.5"></i></span>
+                </a>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="flex-1 max-w-2xl relative hidden md:block">
+                <input type="text" placeholder="Search for products, brands and more" class="w-full bg-white text-gray-800 rounded-sm py-2 pl-4 pr-10 text-sm focus:outline-none shadow-inner">
+                <button class="absolute right-0 top-0 h-full px-4 text-brand-blue hover:text-blue-700 flex items-center justify-center">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+
+            <!-- User Actions & Cart -->
+            <div class="flex items-center gap-6">
+                <!-- Login Button -->
+                <button class="bg-white text-brand-blue font-semibold px-6 py-1.5 rounded-sm text-sm hover:bg-gray-100 transition shadow-sm hidden sm:block">
+                    Login
+                </button>
+
+                <!-- Profile Dropdown (Mobile/Desktop) -->
+                <div class="relative group hidden lg:block">
+                    <button class="flex items-center gap-2 text-sm font-medium hover:text-brand-yellow transition">
+                        <span>More</span>
+                        <i class="fa-solid fa-angle-down text-xs"></i>
+                    </button>
+                    <div class="absolute right-0 w-56 bg-white text-gray-800 shadow-xl rounded-sm py-2 hidden group-hover:block border border-gray-100 z-50">
+                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-brand-light transition"><i class="fa-solid fa-bell text-brand-blue w-5"></i> Notification Preferences</a>
+                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-brand-light transition"><img src="https://img.icons8.com/color/20/000000/customer-support.png" class="w-5"> 24x7 Customer Care</a>
+                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-brand-light transition"><i class="fa-solid fa-chart-line text-brand-blue w-5"></i> Advertise</a>
+                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-brand-light transition"><i class="fa-solid fa-download text-brand-blue w-5"></i> Download App</a>
+                    </div>
+                </div>
+
+                <!-- Cart Button with Badge -->
+                <button onclick="toggleCart()" class="flex items-center gap-2 font-medium hover:text-brand-yellow transition relative focus:outline-none">
+                    <div class="relative">
+                        <i class="fa-solid fa-cart-shopping text-xl"></i>
+                        <span id="cart-badge" class="absolute -top-2 -right-3 bg-brand-yellow text-brand-dark text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center border-2 border-brand-blue shadow">0</span>
+                    </div>
+                    <span class="hidden sm:inline font-semibold">Cart</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Search Bar -->
+        <div class="px-4 pb-3 md:hidden">
+            <div class="relative w-full">
+                <input type="text" placeholder="Search for products, brands and more" class="w-full bg-white text-gray-800 rounded-sm py-2 pl-4 pr-10 text-sm focus:outline-none">
+                <button class="absolute right-0 top-0 h-full px-4 text-brand-blue flex items-center justify-center">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Category Navigation Bar -->
+    <nav class="bg-white shadow-sm border-b border-gray-200 overflow-x-auto hide-scrollbar">
+        <div class="max-w-7xl mx-auto px-4 flex justify-between items-center py-3 min-w-[700px] gap-8">
+            <a href="#electronics" class="flex flex-col items-center gap-1 group cursor-pointer">
+                <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-brand-blue group-hover:scale-105 transition">
+                    <i class="fa-solid fa-laptop text-lg"></i>
+                </div>
+                <span class="text-xs font-semibold text-gray-700 group-hover:text-brand-blue">Electronics</span>
+            </a>
+            <a href="#fashion" class="flex flex-col items-center gap-1 group cursor-pointer">
+                <div class="w-12 h-12 rounded-full bg-pink-50 flex items-center justify-center text-pink-600 group-hover:scale-105 transition">
+                    <i class="fa-solid fa-shirt text-lg"></i>
+                </div>
+                <span class="text-xs font-semibold text-gray-700 group-hover:text-brand-blue">Fashion</span>
+            </a>
+            <a href="#home" class="flex flex-col items-center gap-1 group cursor-pointer">
+                <div class="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 group-hover:scale-105 transition">
+                    <i class="fa-solid fa-couch text-lg"></i>
+                </div>
+                <span class="text-xs font-semibold text-gray-700 group-hover:text-brand-blue">Home & Furniture</span>
+            </a>
+            <a href="#beauty" class="flex flex-col items-center gap-1 group cursor-pointer">
+                <div class="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center text-purple-600 group-hover:scale-105 transition">
+                    <i class="fa-solid fa-spray-can-sparkles text-lg"></i>
+                </div>
+                <span class="text-xs font-semibold text-gray-700 group-hover:text-brand-blue">Beauty & Toys</span>
+            </a>
+            <a href="#grocery" class="flex flex-col items-center gap-1 group cursor-pointer">
+                <div class="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:scale-105 transition">
+                    <i class="fa-solid fa-basket-shopping text-lg"></i>
+                </div>
+                <span class="text-xs font-semibold text-gray-700 group-hover:text-brand-blue">Grocery</span>
+            </a>
+            <a href="#appliances" class="flex flex-col items-center gap-1 group cursor-pointer">
+                <div class="w-12 h-12 rounded-full bg-cyan-50 flex items-center justify-center text-cyan-600 group-hover:scale-105 transition">
+                    <i class="fa-solid fa-tv text-lg"></i>
+                </div>
+                <span class="text-xs font-semibold text-gray-700 group-hover:text-brand-blue">Appliances</span>
+            </a>
+            <a href="#travel" class="flex flex-col items-center gap-1 group cursor-pointer">
+                <div class="w-12 h-12 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:scale-105 transition">
+                    <i class="fa-solid fa-plane text-lg"></i>
+                </div>
+                <span class="text-xs font-semibold text-gray-700 group-hover:text-brand-blue">Travel</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Banner Slider -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="relative rounded-lg overflow-hidden shadow-md bg-gradient-to-r from-blue-900 via-brand-blue to-indigo-800 text-white min-h-[280px] sm:min-h-[360px] flex items-center">
+            <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#ff9f00_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            <div class="relative z-10 px-6 sm:px-12 py-8 max-w-xl">
+                <span class="bg-brand-yellow text-brand-dark font-bold text-xs uppercase px-3 py-1 rounded-full tracking-wide shadow">Mega Sale Live</span>
+                <h1 class="text-3xl sm:text-5xl font-extrabold mt-3 tracking-tight leading-tight">Biggest Tech & Fashion Fest</h1>
+                <p class="text-gray-200 mt-2 text-sm sm:text-base">Up to 80% off on top electronics, smartphones, branded apparel, and home essentials.</p>
+                <div class="mt-6 flex items-center gap-4">
+                    <a href="#trending" class="bg-brand-yellow text-brand-dark font-bold px-6 py-3 rounded shadow hover:bg-amber-400 transition transform hover:-translate-y-0.5">Shop Now</a>
+                    <span class="text-xs text-gray-300 font-medium"><i class="fa-solid fa-shield-halved text-brand-yellow mr-1"></i> 100% Genuine Products</span>
+                </div>
+            </div>
+            <div class="absolute right-4 bottom-0 hidden md:block opacity-95 transform translate-y-4">
+                <div class="w-80 h-72 bg-white/10 backdrop-blur-md rounded-tl-3xl p-6 border border-white/20 shadow-2xl flex flex-col justify-between">
+                    <div class="flex justify-between items-center">
+                        <span class="bg-red-500 text-white text-xs px-2 py-0.5 font-bold rounded">HOT DEAL</span>
+                        <span class="text-brand-yellow font-bold text-sm">Save ₹12,000</span>
+                    </div>
+                    <div class="text-center">
+                        <i class="fa-solid fa-mobile-screen-button text-6xl text-brand-yellow my-2"></i>
+                        <h3 class="font-bold text-lg">MegaPhone Pro Max 5G</h3>
+                        <p class="text-xs text-gray-300">Triple Camera • 256GB • AMOLED</p>
+                    </div>
+                    <div class="flex items-center justify-between pt-2 border-t border-white/10">
+                        <div>
+                            <span class="text-xs text-gray-400 line-through">₹79,999</span>
+                            <p class="text-lg font-extrabold text-brand-yellow">₹67,999</p>
+                        </div>
+                        <button onclick="addToCart('MegaPhone Pro Max 5G', 67999, 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300')" class="bg-brand-yellow text-brand-dark text-xs font-bold px-4 py-2 rounded shadow hover:bg-amber-400 transition">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trending Deals Section -->
+        <section id="trending" class="mt-8">
+            <div class="bg-white rounded-lg shadow-sm p-4 sm:p-6 border border-gray-100">
+                <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-6">
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Trending Deals</h2>
+                        <p class="text-xs sm:text-sm text-gray-500">Grab the best offers of the day before they end!</p>
+                    </div>
+                    <a href="#" class="bg-brand-blue text-white text-xs sm:text-sm font-semibold px-4 py-2 rounded shadow hover:bg-blue-700 transition">View All</a>
+                </div>
+
+                <!-- Product Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+                    <!-- Product 1 -->
+                    <div class="group bg-white border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-xl transition flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-40 sm:h-48 overflow-hidden rounded flex items-center justify-center bg-gray-50 mb-3">
+                                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300" alt="Headphones" class="object-contain h-full group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-2 left-2 bg-green-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">48% OFF</span>
+                            </div>
+                            <h3 class="font-medium text-sm text-gray-800 line-clamp-1 group-hover:text-brand-blue transition">Boat Rockerz 450 ANC</h3>
+                            <div class="flex items-center gap-1 mt-1">
+                                <span class="bg-green-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">4.3 <i class="fa-solid fa-star text-[8px]"></i></span>
+                                <span class="text-xs text-gray-400">(4,129)</span>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-base sm:text-lg font-bold text-gray-900">₹1,499</span>
+                                <span class="text-xs text-gray-400 line-through">₹2,999</span>
+                            </div>
+                            <button onclick="addToCart('Boat Rockerz 450 ANC', 1499, 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300')" class="mt-2 w-full bg-brand-yellow hover:bg-amber-400 text-brand-dark font-semibold text-xs py-2 rounded shadow-sm transition">
+                                <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product 2 -->
+                    <div id="electronics" class="group bg-white border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-xl transition flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-40 sm:h-48 overflow-hidden rounded flex items-center justify-center bg-gray-50 mb-3">
+                                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300" alt="Smartwatch" class="object-contain h-full group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-2 left-2 bg-green-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">60% OFF</span>
+                            </div>
+                            <h3 class="font-medium text-sm text-gray-800 line-clamp-1 group-hover:text-brand-blue transition">Fire-Boltt Phoenix Pro</h3>
+                            <div class="flex items-center gap-1 mt-1">
+                                <span class="bg-green-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">4.2 <i class="fa-solid fa-star text-[8px]"></i></span>
+                                <span class="text-xs text-gray-400">(12,850)</span>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-base sm:text-lg font-bold text-gray-900">₹1,799</span>
+                                <span class="text-xs text-gray-400 line-through">₹4,499</span>
+                            </div>
+                            <button onclick="addToCart('Fire-Boltt Phoenix Pro', 1799, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300')" class="mt-2 w-full bg-brand-yellow hover:bg-amber-400 text-brand-dark font-semibold text-xs py-2 rounded shadow-sm transition">
+                                <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product 3 -->
+                    <div class="group bg-white border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-xl transition flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-40 sm:h-48 overflow-hidden rounded flex items-center justify-center bg-gray-50 mb-3">
+                                <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=300" alt="Smartwatch Ultra" class="object-contain h-full group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-2 left-2 bg-green-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">35% OFF</span>
+                            </div>
+                            <h3 class="font-medium text-sm text-gray-800 line-clamp-1 group-hover:text-brand-blue transition">Apple Watch Series 9</h3>
+                            <div class="flex items-center gap-1 mt-1">
+                                <span class="bg-green-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">4.8 <i class="fa-solid fa-star text-[8px]"></i></span>
+                                <span class="text-xs text-gray-400">(940)</span>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-base sm:text-lg font-bold text-gray-900">₹41,900</span>
+                                <span class="text-xs text-gray-400 line-through">₹45,900</span>
+                            </div>
+                            <button onclick="addToCart('Apple Watch Series 9', 41900, 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=300')" class="mt-2 w-full bg-brand-yellow hover:bg-amber-400 text-brand-dark font-semibold text-xs py-2 rounded shadow-sm transition">
+                                <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product 4 -->
+                    <div class="group bg-white border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-xl transition flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-40 sm:h-48 overflow-hidden rounded flex items-center justify-center bg-gray-50 mb-3">
+                                <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300" alt="Gaming Headphones" class="object-contain h-full group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-2 left-2 bg-green-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">50% OFF</span>
+                            </div>
+                            <h3 class="font-medium text-sm text-gray-800 line-clamp-1 group-hover:text-brand-blue transition">Razer BlackShark V2</h3>
+                            <div class="flex items-center gap-1 mt-1">
+                                <span class="bg-green-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">4.6 <i class="fa-solid fa-star text-[8px]"></i></span>
+                                <span class="text-xs text-gray-400">(2,100)</span>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-base sm:text-lg font-bold text-gray-900">₹5,999</span>
+                                <span class="text-xs text-gray-400 line-through">₹11,999</span>
+                            </div>
+                            <button onclick="addToCart('Razer BlackShark V2', 5999, 'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300')" class="mt-2 w-full bg-brand-yellow hover:bg-amber-400 text-brand-dark font-semibold text-xs py-2 rounded shadow-sm transition">
+                                <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product 5 -->
+                    <div class="group bg-white border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-xl transition flex flex-col justify-between hidden lg:flex">
+                        <div>
+                            <div class="relative h-40 sm:h-48 overflow-hidden rounded flex items-center justify-center bg-gray-50 mb-3">
+                                <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=300" alt="Camera" class="object-contain h-full group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-2 left-2 bg-green-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">20% OFF</span>
+                            </div>
+                            <h3 class="font-medium text-sm text-gray-800 line-clamp-1 group-hover:text-brand-blue transition">Fujifilm Instax Mini 12</h3>
+                            <div class="flex items-center gap-1 mt-1">
+                                <span class="bg-green-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">4.5 <i class="fa-solid fa-star text-[8px]"></i></span>
+                                <span class="text-xs text-gray-400">(3,450)</span>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-base sm:text-lg font-bold text-gray-900">₹5,999</span>
+                                <span class="text-xs text-gray-400 line-through">₹7,499</span>
+                            </div>
+                            <button onclick="addToCart('Fujifilm Instax Mini 12', 5999, 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=300')" class="mt-2 w-full bg-brand-yellow hover:bg-amber-400 text-brand-dark font-semibold text-xs py-2 rounded shadow-sm transition">
+                                <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Top Smartphones Section -->
+        <section class="mt-8">
+            <div class="bg-white rounded-lg shadow-sm p-4 sm:p-6 border border-gray-100">
+                <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-6">
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Top Smartphones</h2>
+                        <p class="text-xs sm:text-sm text-gray-500">Unbeatable prices on flagship devices</p>
+                    </div>
+                    <a href="#" class="bg-brand-blue text-white text-xs sm:text-sm font-semibold px-4 py-2 rounded shadow hover:bg-blue-700 transition">View All</a>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+                    <!-- Phone 1 -->
+                    <div class="group bg-white border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-xl transition flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-40 sm:h-48 overflow-hidden rounded flex items-center justify-center bg-gray-50 mb-3">
+                                <img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=300" alt="Phone" class="object-contain h-full group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-2 left-2 bg-green-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">25% OFF</span>
+                            </div>
+                            <h3 class="font-medium text-sm text-gray-800 line-clamp-1 group-hover:text-brand-blue transition">Galaxy S24 Ultra 5G</h3>
+                            <div class="flex items-center gap-1 mt-1">
+                                <span class="bg-green-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">4.7 <i class="fa-solid fa-star text-[8px]"></i></span>
+                                <span class="text-xs text-gray-400">(6,890)</span>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-base sm:text-lg font-bold text-gray-900">₹1,09,999</span>
+                                <span class="text-xs text-gray-400 line-through">₹1,34,999</span>
+                            </div>
+                            <button onclick="addToCart('Galaxy S24 Ultra 5G', 109999, 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=300')" class="mt-2 w-full bg-brand-yellow hover:bg-amber-400 text-brand-dark font-semibold text-xs py-2 rounded shadow-sm transition">
+                                <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Phone 2 -->
+                    <div class="group bg-white border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-xl transition flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-40 sm:h-48 overflow-hidden rounded flex items-center justify-center bg-gray-50 mb-3">
+                                <img src="https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=300" alt="iPhone" class="object-contain h-full group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-2 left-2 bg-green-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">15% OFF</span>
+                            </div>
+                            <h3 class="font-medium text-sm text-gray-800 line-clamp-1 group-hover:text-brand-blue transition">iPhone 15 Pro</h3>
+                            <div class="flex items-center gap-1 mt-1">
+                                <span class="bg-green-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">4.9 <i class="fa-solid fa-star text-[8px]"></i></span>
+                                <span class="text-xs text-gray-400">(18,400)</span>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-base sm:text-lg font-bold text-gray-900">₹1,19,900</span>
+                                <span class="text-xs text-gray-400 line-through">₹1,39,900</span>
+                            </div>
+                            <button onclick="addToCart('iPhone 15 Pro', 119900, 'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=300')" class="mt-2 w-full bg-brand-yellow hover:bg-amber-400 text-brand-dark font-semibold text-xs py-2 rounded shadow-sm transition">
+                                <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Phone 3 -->
+                    <div class="group bg-white border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-xl transition flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-40 sm:h-48 overflow-hidden rounded flex items-center justify-center bg-gray-50 mb-3">
+                                <img src="https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=300" alt="Pixel Phone" class="object-contain h-full group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-2 left-2 bg-green-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">30% OFF</span>
+                            </div>
+                            <h3 class="font-medium text-sm text-gray-800 line-clamp-1 group-hover:text-brand-blue transition">Google Pixel 8 Pro</h3>
+                            <div class="flex items-center gap-1 mt-1">
+                                <span class="bg-green-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">4.4 <i class="fa-solid fa-star text-[8px]"></i></span>
+                                <span class="text-xs text-gray-400">(2,340)</span>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-base sm:text-lg font-bold text-gray-900">₹75,999</span>
+                                <span class="text-xs text-gray-400 line-through">₹1,06,999</span>
+                            </div>
+                            <button onclick="addToCart('Google Pixel 8 Pro', 75999, 'https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=300')" class="mt-2 w-full bg-brand-yellow hover:bg-amber-400 text-brand-dark font-semibold text-xs py-2 rounded shadow-sm transition">
+                                <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Phone 4 -->
+                    <div class="group bg-white border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-xl transition flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-40 sm:h-48 overflow-hidden rounded flex items-center justify-center bg-gray-50 mb-3">
+                                <img src="https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=300" alt="OnePlus Phone" class="object-contain h-full group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-2 left-2 bg-green-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">20% OFF</span>
+                            </div>
+                            <h3 class="font-medium text-sm text-gray-800 line-clamp-1 group-hover:text-brand-blue transition">OnePlus 12 5G</h3>
+                            <div class="flex items-center gap-1 mt-1">
+                                <span class="bg-green-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">4.5 <i class="fa-solid fa-star text-[8px]"></i></span>
+                                <span class="text-xs text-gray-400">(5,120)</span>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-base sm:text-lg font-bold text-gray-900">₹64,999</span>
+                                <span class="text-xs text-gray-400 line-through">₹69,999</span>
+                            </div>
+                            <button onclick="addToCart('OnePlus 12 5G', 64999, 'https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=300')" class="mt-2 w-full bg-brand-yellow hover:bg-amber-400 text-brand-dark font-semibold text-xs py-2 rounded shadow-sm transition">
+                                <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Phone 5 -->
+                    <div class="group bg-white border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-xl transition flex flex-col justify-between hidden lg:flex">
+                        <div>
+                            <div class="relative h-40 sm:h-48 overflow-hidden rounded flex items-center justify-center bg-gray-50 mb-3">
+                                <img src="https://images.unsplash.com/photo-1533228100845-08145b01de14?w=300" alt="Budget Phone" class="object-contain h-full group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-2 left-2 bg-green-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">40% OFF</span>
+                            </div>
+                            <h3 class="font-medium text-sm text-gray-800 line-clamp-1 group-hover:text-brand-blue transition">Redmi Note 13 Pro+</h3>
+                            <div class="flex items-center gap-1 mt-1">
+                                <span class="bg-green-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">4.3 <i class="fa-solid fa-star text-[8px]"></i></span>
+                                <span class="text-xs text-gray-400">(9,800)</span>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-base sm:text-lg font-bold text-gray-900">₹27,999</span>
+                                <span class="text-xs text-gray-400 line-through">₹35,999</span>
+                            </div>
+                            <button onclick="addToCart('Redmi Note 13 Pro+', 27999, 'https://images.unsplash.com/photo-1533228100845-08145b01de14?w=300')" class="mt-2 w-full bg-brand-yellow hover:bg-amber-400 text-brand-dark font-semibold text-xs py-2 rounded shadow-sm transition">
+                                <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fashion Best Sellers Section -->
+        <section id="fashion" class="mt-8">
+            <div class="bg-white rounded-lg shadow-sm p-4 sm:p-6 border border-gray-100">
+                <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-6">
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Fashion Best Sellers</h2>
+                        <p class="text-xs sm:text-sm text-gray-500">Upgrade your wardrobe with trendsetting styles</p>
+                    </div>
+                    <a href="#" class="bg-brand-blue text-white text-xs sm:text-sm font-semibold px-4 py-2 rounded shadow hover:bg-blue-700 transition">View All</a>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+                    <!-- Fashion 1 -->
+                    <div class="group bg-white border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-xl transition flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-40 sm:h-48 overflow-hidden rounded flex items-center justify-center bg-gray-50 mb-3">
+                                <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=300" alt="T-Shirt" class="object-cover h-full w-full group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-2 left-2 bg-green-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">70% OFF</span>
+                            </div>
+                            <h3 class="font-medium text-sm text-gray-800 line-clamp-1 group-hover:text-brand-blue transition">Men Solid Casual Shirt</h3>
+                            <div class="flex items-center gap-1 mt-1">
+                                <span class="bg-green-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">4.0 <i class="fa-solid fa-star text-[8px]"></i></span>
+                                <span class="text-xs text-gray-400">(1,240)</span>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-base sm:text-lg font-bold text-gray-900">₹649</span>
+                                <span class="text-xs text-gray-400 line-through">₹2,199</span>
+                            </div>
+                            <button onclick="addToCart('Men Solid Casual Shirt', 649, 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=300')" class="mt-2 w-full bg-brand-yellow hover:bg-amber-400 text-brand-dark font-semibold text-xs py-2 rounded shadow-sm transition">
+                                <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Fashion 2 -->
+                    <div class="group bg-white border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-xl transition flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-40 sm:h-48 overflow-hidden rounded flex items-center justify-center bg-gray-50 mb-3">
+                                <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=300" alt="Black T-shirt" class="object-cover h-full w-full group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-2 left-2 bg-green-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">65% OFF</span>
+                            </div>
+                            <h3 class="font-medium text-sm text-gray-800 line-clamp-1 group-hover:text-brand-blue transition">Oversized Cotton Tee</h3>
+                            <div class="flex items-center gap-1 mt-1">
+                                <span class="bg-green-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">4.4 <i class="fa-solid fa-star text-[8px]"></i></span>
+                                <span class="text-xs text-gray-400">(3,410)</span>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-base sm:text-lg font-bold text-gray-900">₹499</span>
+                                <span class="text-xs text-gray-400 line-through">₹1,499</span>
+                            </div>
+                            <button onclick="addToCart('Oversized Cotton Tee', 499, 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=300')" class="mt-2 w-full bg-brand-yellow hover:bg-amber-400 text-brand-dark font-semibold text-xs py-2 rounded shadow-sm transition">
+                                <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Fashion 3 -->
+                    <div id="beauty" class="group bg-white border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-xl transition flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-40 sm:h-48 overflow-hidden rounded flex items-center justify-center bg-gray-50 mb-3">
+                                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300" alt="Running Shoes" class="object-cover h-full w-full group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-2 left-2 bg-green-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">40% OFF</span>
+                            </div>
+                            <h3 class="font-medium text-sm text-gray-800 line-clamp-1 group-hover:text-brand-blue transition">Nike Air Runner Sneakers</h3>
+                            <div class="flex items-center gap-1 mt-1">
+                                <span class="bg-green-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">4.6 <i class="fa-solid fa-star text-[8px]"></i></span>
+                                <span class="text-xs text-gray-400">(5,890)</span>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-base sm:text-lg font-bold text-gray-900">₹4,795</span>
+                                <span class="text-xs text-gray-400 line-through">₹7,995</span>
+                            </div>
+                            <button onclick="addToCart('Nike Air Runner Sneakers', 4795, 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300')" class="mt-2 w-full bg-brand-yellow hover:bg-amber-400 text-brand-dark font-semibold text-xs py-2 rounded shadow-sm transition">
+                                <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Fashion 4 -->
+                    <div id="grocery" class="group bg-white border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-xl transition flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-40 sm:h-48 overflow-hidden rounded flex items-center justify-center bg-gray-50 mb-3">
+                                <img src="https://images.unsplash.com/photo-1591561954557-26941169b49e?w=300" alt="Jacket" class="object-cover h-full w-full group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-2 left-2 bg-green-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">55% OFF</span>
+                            </div>
+                            <h3 class="font-medium text-sm text-gray-800 line-clamp-1 group-hover:text-brand-blue transition">Winter Bomber Jacket</h3>
+                            <div class="flex items-center gap-1 mt-1">
+                                <span class="bg-green-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">4.2 <i class="fa-solid fa-star text-[8px]"></i></span>
+                                <span class="text-xs text-gray-400">(890)</span>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-base sm:text-lg font-bold text-gray-900">₹1,799</span>
+                                <span class="text-xs text-gray-400 line-through">₹3,999</span>
+                            </div>
+                            <button onclick="addToCart('Winter Bomber Jacket', 1799, 'https://images.unsplash.com/photo-1591561954557-26941169b49e?w=300')" class="mt-2 w-full bg-brand-yellow hover:bg-amber-400 text-brand-dark font-semibold text-xs py-2 rounded shadow-sm transition">
+                                <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Fashion 5 -->
+                    <div id="home" class="group bg-white border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-xl transition flex flex-col justify-between hidden lg:flex">
+                        <div>
+                            <div class="relative h-40 sm:h-48 overflow-hidden rounded flex items-center justify-center bg-gray-50 mb-3">
+                                <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=300" alt="Formal Blazer" class="object-cover h-full w-full group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-2 left-2 bg-green-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">45% OFF</span>
+                            </div>
+                            <h3 class="font-medium text-sm text-gray-800 line-clamp-1 group-hover:text-brand-blue transition">Slim Fit Formal Blazer</h3>
+                            <div class="flex items-center gap-1 mt-1">
+                                <span class="bg-green-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">4.5 <i class="fa-solid fa-star text-[8px]"></i></span>
+                                <span class="text-xs text-gray-400">(1,560)</span>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-base sm:text-lg font-bold text-gray-900">₹2,999</span>
+                                <span class="text-xs text-gray-400 line-through">₹5,499</span>
+                            </div>
+                            <button onclick="addToCart('Slim Fit Formal Blazer', 2999, 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=300')" class="mt-2 w-full bg-brand-yellow hover:bg-amber-400 text-brand-dark font-semibold text-xs py-2 rounded shadow-sm transition">
+                                <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Interactive Shopping Cart Drawer / Sidebar -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
+        <div id="cart-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-xs transition-opacity opacity-0" onclick="toggleCart()"></div>
+
+        <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+            <div id="cart-panel" class="pointer-events-auto w-screen max-w-md transform translate-x-full transition-transform duration-300 ease-in-out bg-white shadow-2xl flex flex-col">
+                <!-- Drawer Header -->
+                <div class="bg-brand-blue text-white px-6 py-4 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-cart-shopping text-xl"></i>
+                        <h2 class="text-lg font-bold" id="slide-over-title">My Shopping Cart</h2>
+                    </div>
+                    <button onclick="toggleCart()" class="text-white hover:text-brand-yellow p-1 rounded-full focus:outline-none">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <!-- Cart Items List -->
+                <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 divide-y divide-gray-100">
+                    <!-- Dynamically populated items will appear here -->
+                    <div id="empty-cart-message" class="text-center py-20 text-gray-400">
+                        <i class="fa-solid fa-cart-arrow-down text-5xl mb-3 text-gray-300"></i>
+                        <p class="text-lg font-medium text-gray-600">Your cart is empty!</p>
+                        <p class="text-xs text-gray-400 mt-1">Add items to start shopping.</p>
+                    </div>
+                </div>
+
+                <!-- Drawer Footer & Checkout -->
+                <div class="border-t border-gray-200 bg-gray-50 p-6">
+                    <div class="flex justify-between text-base font-semibold text-gray-900 mb-2">
+                        <p>Subtotal</p>
+                        <p id="cart-subtotal">₹0</p>
+                    </div>
+                    <p class="text-xs text-gray-500 mb-4">Shipping and taxes calculated at checkout.</p>
+                    <button onclick="checkout()" class="w-full bg-brand-yellow hover:bg-amber-400 text-brand-dark font-bold py-3 px-4 rounded shadow-md transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-lock text-sm"></i> Proceed to Checkout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Professional Footer -->
+    <footer class="bg-brand-dark text-gray-300 mt-16 pt-12 pb-6 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 pb-12 border-b border-gray-800 text-sm">
+            <div>
+                <h4 class="text-white font-semibold mb-4 uppercase text-xs tracking-wider">About</h4>
+                <ul class="space-y-2.5">
+                    <li><a href="#" class="hover:text-brand-yellow transition">Contact Us</a></li>
+                    <li><a href="#" class="hover:text-brand-yellow transition">About Us</a></li>
+                    <li><a href="#" class="hover:text-brand-yellow transition">Careers</a></li>
+                    <li><a href="#" class="hover:text-brand-yellow transition">MegaBazaar Stories</a></li>
+                    <li><a href="#" class="hover:text-brand-yellow transition">Press & Corporate Info</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold mb-4 uppercase text-xs tracking-wider">Help</h4>
+                <ul class="space-y-2.5">
+                    <li><a href="#" class="hover:text-brand-yellow transition">Payments</a></li>
+                    <li><a href="#" class="hover:text-brand-yellow transition">Shipping</a></li>
+                    <li><a href="#" class="hover:text-brand-yellow transition">Cancellation & Returns</a></li>
+                    <li><a href="#" class="hover:text-brand-yellow transition">FAQ</a></li>
+                    <li><a href="#" class="hover:text-brand-yellow transition">Report Infringement</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold mb-4 uppercase text-xs tracking-wider">Policy</h4>
+                <ul class="space-y-2.5">
+                    <li><a href="#" class="hover:text-brand-yellow transition">Return Policy</a></li>
+                    <li><a href="#" class="hover:text-brand-yellow transition">Terms Of Use</a></li>
+                    <li><a href="#" class="hover:text-brand-yellow transition">Security</a></li>
+                    <li><a href="#" class="hover:text-brand-yellow transition">Privacy</a></li>
+                    <li><a href="#" class="hover:text-brand-yellow transition">Sitemap</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold mb-4 uppercase text-xs tracking-wider">Social</h4>
+                <ul class="space-y-2.5 flex flex-col">
+                    <li><a href="#" class="hover:text-brand-yellow transition flex items-center gap-2"><i class="fa-brands fa-facebook-f w-4"></i> Facebook</a></li>
+                    <li><a href="#" class="hover:text-brand-yellow transition flex items-center gap-2"><i class="fa-brands fa-twitter w-4"></i> Twitter</a></li>
+                    <li><a href="#" class="hover:text-brand-yellow transition flex items-center gap-2"><i class="fa-brands fa-youtube w-4"></i> YouTube</a></li>
+                    <li><a href="#" class="hover:text-brand-yellow transition flex items-center gap-2"><i class="fa-brands fa-instagram w-4"></i> Instagram</a></li>
+                </ul>
+            </div>
+            <div class="col-span-2 md:col-span-1">
+                <h4 class="text-white font-semibold mb-4 uppercase text-xs tracking-wider">Registered Office Address</h4>
+                <p class="text-xs text-gray-400 leading-relaxed">
+                    MegaBazaar Internet Private Limited,<br>
+                    Buildings Alyssa, Begonia &<br>
+                    Clove Embassy Tech Village, Outer Ring Road,<br>
+                    Devarabeesanahalli Village,<br>
+                    Bengaluru, 560103, Karnataka, India
+                </p>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-400 gap-4">
+            <div class="flex items-center gap-6">
+                <a href="#" class="flex items-center gap-1.5 hover:text-white transition"><i class="fa-solid fa-store text-brand-yellow"></i> Become a Seller</a>
+                <a href="#" class="flex items-center gap-1.5 hover:text-white transition"><i class="fa-solid fa-star text-brand-yellow"></i> Advertise</a>
+                <a href="#" class="flex items-center gap-1.5 hover:text-white transition"><i class="fa-solid fa-gift text-brand-yellow"></i> Gift Cards</a>
+                <a href="#" class="flex items-center gap-1.5 hover:text-white transition"><i class="fa-solid fa-circle-question text-brand-yellow"></i> Help Center</a>
+            </div>
+            <div>
+                <p>&copy; 2026 MegaBazaar.com. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        let cart = [];
+
+        function toggleCart() {
+            const drawer = document.getElementById('cart-drawer');
+            const panel = document.getElementById('cart-panel');
+            const backdrop = document.getElementById('cart-backdrop');
+
+            if (drawer.classList.contains('hidden')) {
+                drawer.classList.remove('hidden');
+                setTimeout(() => {
+                    backdrop.classList.remove('opacity-0');
+                    panel.classList.remove('translate-x-full');
+                }, 10);
+            } else {
+                backdrop.classList.add('opacity-0');
+                panel.classList.add('translate-x-full');
+                setTimeout(() => {
+                    drawer.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        function addToCart(name, price, image) {
+            const existingItem = cart.find(item => item.name === name);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ name, price, image, quantity: 1 });
+            }
+            updateCartUI();
+            
+            // Show drawer upon adding item for a pleasant user experience
+            const drawer = document.getElementById('cart-drawer');
+            if (drawer.classList.contains('hidden')) {
+                toggleCart();
+            }
+        }
+
+        function removeFromCart(name) {
+            cart = cart.filter(item => item.name !== name);
+            updateCartUI();
+        }
+
+        function updateQuantity(name, delta) {
+            const item = cart.find(item => item.name === name);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) {
+                    removeFromCart(name);
+                } else {
+                    updateCartUI();
+                }
+            }
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById('cart-badge');
+            const container = document.getElementById('cart-items-container');
+            const subtotalEl = document.getElementById('cart-subtotal');
+
+            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            badge.textContent = totalCount;
+            subtotalEl.textContent = '₹' + totalPrice.toLocaleString('en-IN');
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div id="empty-cart-message" class="text-center py-20 text-gray-400">
+                        <i class="fa-solid fa-cart-arrow-down text-5xl mb-3 text-gray-300"></i>
+                        <p class="text-lg font-medium text-gray-600">Your cart is empty!</p>
+                        <p class="text-xs text-gray-400 mt-1">Add items to start shopping.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = cart.map(item => `
+                <div class="py-4 flex items-center gap-4">
+                    <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-contain bg-gray-50 rounded border p-1">
+                    <div class="flex-1">
+                        <h4 class="text-sm font-medium text-gray-800 line-clamp-1">${item.name}</h4>
+                        <p class="text-sm font-bold text-gray-900 mt-0.5">₹${(item.price * item.quantity).toLocaleString('en-IN')}</p>
+                        <div class="flex items-center gap-3 mt-2">
+                            <div class="flex items-center border border-gray-300 rounded">
+                                <button onclick="updateQuantity('${item.name}', -1)" class="px-2 py-0.5 text-gray-600 hover:bg-gray-100 transition">-</button>
+                                <span class="px-3 text-xs font-semibold">${item.quantity}</span>
+                                <button onclick="updateQuantity('${item.name}', 1)" class="px-2 py-0.5 text-gray-600 hover:bg-gray-100 transition">+</button>
+                            </div>
+                            <button onclick="removeFromCart('${item.name}')" class="text-xs text-red-500 hover:text-red-700 font-medium transition">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                return;
+            }
+            alert('Redirecting to Secure Checkout Gateway...');
+        }
+    </script>
+</body>
+</html>
