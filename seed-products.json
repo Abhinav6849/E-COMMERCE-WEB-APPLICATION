@@ -1,0 +1,162 @@
+[
+  {
+    "name": "Boat Rockerz 450 ANC",
+    "category": "Electronics",
+    "price": 1499,
+    "mrp": 2999,
+    "imageUrl": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300",
+    "rating": 4.3,
+    "ratingCount": 4129,
+    "description": "Boat Rockerz 450 ANC - available on MegaBazaar with fast delivery and easy returns."
+  },
+  {
+    "name": "Fire-Boltt Phoenix Pro",
+    "category": "Electronics",
+    "price": 1799,
+    "mrp": 4499,
+    "imageUrl": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300",
+    "rating": 4.2,
+    "ratingCount": 12850,
+    "description": "Fire-Boltt Phoenix Pro - available on MegaBazaar with fast delivery and easy returns."
+  },
+  {
+    "name": "Apple Watch Series 9",
+    "category": "Electronics",
+    "price": 41900,
+    "mrp": 45900,
+    "imageUrl": "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=300",
+    "rating": 4.8,
+    "ratingCount": 940,
+    "description": "Apple Watch Series 9 - available on MegaBazaar with fast delivery and easy returns."
+  },
+  {
+    "name": "Razer BlackShark V2",
+    "category": "Electronics",
+    "price": 5999,
+    "mrp": 11999,
+    "imageUrl": "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300",
+    "rating": 4.6,
+    "ratingCount": 2100,
+    "description": "Razer BlackShark V2 - available on MegaBazaar with fast delivery and easy returns."
+  },
+  {
+    "name": "Fujifilm Instax Mini 12",
+    "category": "Electronics",
+    "price": 5999,
+    "mrp": 7499,
+    "imageUrl": "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=300",
+    "rating": 4.5,
+    "ratingCount": 3450,
+    "description": "Fujifilm Instax Mini 12 - available on MegaBazaar with fast delivery and easy returns."
+  },
+  {
+    "name": "Galaxy S24 Ultra 5G",
+    "category": "Mobiles",
+    "price": 109999,
+    "mrp": 134999,
+    "imageUrl": "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=300",
+    "rating": 4.7,
+    "ratingCount": 6890,
+    "description": "Galaxy S24 Ultra 5G - available on MegaBazaar with fast delivery and easy returns."
+  },
+  {
+    "name": "iPhone 15 Pro",
+    "category": "Mobiles",
+    "price": 119900,
+    "mrp": 139900,
+    "imageUrl": "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=300",
+    "rating": 4.9,
+    "ratingCount": 18400,
+    "description": "iPhone 15 Pro - available on MegaBazaar with fast delivery and easy returns."
+  },
+  {
+    "name": "Google Pixel 8 Pro",
+    "category": "Mobiles",
+    "price": 75999,
+    "mrp": 106999,
+    "imageUrl": "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=300",
+    "rating": 4.4,
+    "ratingCount": 2340,
+    "description": "Google Pixel 8 Pro - available on MegaBazaar with fast delivery and easy returns."
+  },
+  {
+    "name": "OnePlus 12 5G",
+    "category": "Mobiles",
+    "price": 64999,
+    "mrp": 69999,
+    "imageUrl": "https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=300",
+    "rating": 4.5,
+    "ratingCount": 5120,
+    "description": "OnePlus 12 5G - available on MegaBazaar with fast delivery and easy returns."
+  },
+  {
+    "name": "Redmi Note 13 Pro+",
+    "category": "Mobiles",
+    "price": 27999,
+    "mrp": 35999,
+    "imageUrl": "https://images.unsplash.com/photo-1533228100845-08145b01de14?w=300",
+    "rating": 4.3,
+    "ratingCount": 9800,
+    "description": "Redmi Note 13 Pro+ - available on MegaBazaar with fast delivery and easy returns."
+  },
+  {
+    "name": "Men Solid Casual Shirt",
+    "category": "Fashion",
+    "price": 649,
+    "mrp": 2199,
+    "imageUrl": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=300",
+    "rating": 4.0,
+    "ratingCount": 1240,
+    "description": "Men Solid Casual Shirt - available on MegaBazaar with fast delivery and easy returns."
+  },
+  {
+    "name": "Oversized Cotton Tee",
+    "category": "Fashion",
+    "price": 499,
+    "mrp": 1499,
+    "imageUrl": "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=300",
+    "rating": 4.4,
+    "ratingCount": 3410,
+    "description": "Oversized Cotton Tee - available on MegaBazaar with fast delivery and easy returns."
+  },
+  {
+    "name": "Nike Air Runner Sneakers",
+    "category": "Fashion",
+    "price": 4795,
+    "mrp": 7995,
+    "imageUrl": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300",
+    "rating": 4.6,
+    "ratingCount": 5890,
+    "description": "Nike Air Runner Sneakers - available on MegaBazaar with fast delivery and easy returns."
+  },
+  {
+    "name": "Winter Bomber Jacket",
+    "category": "Fashion",
+    "price": 1799,
+    "mrp": 3999,
+    "imageUrl": "https://images.unsplash.com/photo-1591561954557-26941169b49e?w=300",
+    "rating": 4.2,
+    "ratingCount": 890,
+    "description": "Winter Bomber Jacket - available on MegaBazaar with fast delivery and easy returns."
+  },
+  {
+    "name": "Slim Fit Formal Blazer",
+    "category": "Fashion",
+    "price": 2999,
+    "mrp": 5499,
+    "imageUrl": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=300",
+    "rating": 4.5,
+    "ratingCount": 1560,
+    "description": "Slim Fit Formal Blazer - available on MegaBazaar with fast delivery and easy returns."
+  },
+  {
+    "name": "MegaPhone Pro Max 5G",
+    "category": "Mobiles",
+    "price": 67999,
+    "mrp": 79999,
+    "imageUrl": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300",
+    "rating": 4.6,
+    "ratingCount": 2310,
+    "description": "MegaPhone Pro Max 5G - Triple Camera, 256GB, AMOLED display."
+  }
+]
